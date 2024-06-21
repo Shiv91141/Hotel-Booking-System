@@ -12,6 +12,10 @@ const roomSchema= mongoose.Schema({
         type: Number,
         required: true
     },
+    rentperday:{
+        type: Number,
+        required :true
+    },
     imageurls :[],
     currentbookings:[],
     type: {
@@ -23,7 +27,7 @@ const roomSchema= mongoose.Schema({
         required :true
     }
 },{
-    timestams: true,
+    timestamps: true,
 })
 const roomModel = mongoose.model('rooms',roomSchema)
 module.exports=roomModel
