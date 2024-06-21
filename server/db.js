@@ -1,15 +1,14 @@
 const mongoose = require("mongoose");
+require('dotenv').config();
 
-var mongoURL =
-  "mongodb+srv://PrasannaKante:Prasanna%40123@roomsserver.klsw6az.mongodb.net/roomsDB";
+const mongoURL = process.env.MONGO_URL;
 
-mongoose.connect(mongoURL, { useUnifiedTopology: true, useNewUrlParser: true });
+mongoose.connect(mongoURL, { useUnifiedTopology: true, useNewUrlParser: true })
+  .then(() => console.log("MongoDB connection successful"))
+  .catch((err) => console.log("MongoDB connection failed: ", err));
 
-var connection = mongoose.connection;
+const connection = mongoose.connection;
 
-connection.on("error", () => console.log("MongoDB connection failed"));
-connection.on("connected", () => {
-  console.log("MongoDB conenction successful");
-});
+connection.on("error", (err) => console.log("MongoDB connection error: ", err));
 
 module.exports = mongoose;
