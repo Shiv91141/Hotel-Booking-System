@@ -10,7 +10,7 @@ function Bookingscreen() {
   const [room, setroom] = useState(null);
   const [loading, setloading] = useState(true);
   const [error, seterror] = useState(false);
-
+  const [totalamount,settotalamount] =useState();
   const totaldays =
     moment(todate, "DD-MM-YYYY").diff(moment(fromdate, "DD-MM-YYYY"), "days") +
     1;
@@ -21,6 +21,7 @@ function Bookingscreen() {
         setloading(true);
         const { data } = await axios.post("/api/rooms/getroombyid", { roomid });
         setroom(data);
+        settotalamount(data.rentperday*totaldays);
         // console.log(data);
         setloading(false);
       } catch (error) {
@@ -35,6 +36,23 @@ function Bookingscreen() {
     }
   }, [roomid]);
 
+  async function bookRoom(){
+    const bookingDetails={
+      room,
+      userid:JSON.parse(localStorage.getItem('currentUser'))._id,
+      fromdate,
+      todate,
+      totalamount,
+      totaldays
+    }
+
+    try{
+      const result=await axios.post('/api/bookings/bookroom',bookingDetails)
+    }catch(error ){
+
+    }
+
+  }
   return (
     <div className="m-5">
       {loading ? (
@@ -53,7 +71,7 @@ function Bookingscreen() {
                 <h1>Booking Details</h1>
                 <hr />
                 <b>
-                  <p>Name: </p>
+                  <p>Name: {JSON.parse(localStorage.getItem('currentUser')).name}</p>
                   <p>From Date: {fromdate}</p>
                   <p>To Date: {todate}</p>
                   <p>Max Count: {room.maxcount}</p>
@@ -65,11 +83,11 @@ function Bookingscreen() {
                   <hr />
                   <p>Total Days: {totaldays}</p>
                   <p>Rent per day : {room.rentperday}</p>
-                  <p>Total Amount : {totaldays * room.rentperday}</p>
+                  <p>Total Amount : {totalamount}</p>
                 </b>
               </div>
               <div style={{ float: "right" }}>
-                <button className="btn btn-primary">Pay Now</button>
+                <button className="btn btn-primary" onClick={bookRoom}>Pay Now</button>
               </div>
             </div>
           </div>
