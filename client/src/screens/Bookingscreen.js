@@ -4,6 +4,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Error from "../components/Error.js";
 import moment from "moment";
+import StripeCheckout from 'react-stripe-checkout';
 
 function Bookingscreen() {
   var { roomid, fromdate, todate } = useParams();
@@ -36,14 +37,16 @@ function Bookingscreen() {
     }
   }, [roomid]);
 
-  async function bookRoom(){
+  async function onToken(token){
+    console.log(token);
     const bookingDetails={
       room,
       userid:JSON.parse(localStorage.getItem('currentUser'))._id,
       fromdate,
       todate,
       totalamount,
-      totaldays
+      totaldays,
+      token
     }
 
     try{
@@ -51,7 +54,6 @@ function Bookingscreen() {
     }catch(error ){
 
     }
-
   }
   return (
     <div className="m-5">
@@ -87,7 +89,14 @@ function Bookingscreen() {
                 </b>
               </div>
               <div style={{ float: "right" }}>
-                <button className="btn btn-primary" onClick={bookRoom}>Pay Now</button>
+                 <StripeCheckout
+                  amount={totalamount*100}
+                  token={onToken}
+                  currency="INR"
+                  stripeKey="pk_test_51Ps3eFAK1krkn2bDwR7uQpx2WzxKVIoDrKUGWdDwMybXuCLhwpd4fnVLmtRcPiNTsept751GF92Ui2gAoCqhaehr00af524Bwx"
+                  >
+                    <button className="btn btn-primary">Pay Now</button>
+                  </StripeCheckout>
               </div>
             </div>
           </div>
