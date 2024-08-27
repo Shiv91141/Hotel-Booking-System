@@ -11,10 +11,8 @@ function Bookingscreen() {
   const [room, setroom] = useState(null);
   const [loading, setloading] = useState(true);
   const [error, seterror] = useState(false);
-  const [totalamount,settotalamount] =useState();
-  const totaldays =
-    moment(todate, "DD-MM-YYYY").diff(moment(fromdate, "DD-MM-YYYY"), "days") +
-    1;
+  const [totalamount, settotalamount] = useState(0);
+  const totaldays = moment(todate, "DD-MM-YYYY").diff(moment(fromdate, "DD-MM-YYYY"), "days") + 1;
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -22,8 +20,7 @@ function Bookingscreen() {
         setloading(true);
         const { data } = await axios.post("/api/rooms/getroombyid", { roomid });
         setroom(data);
-        settotalamount(data.rentperday*totaldays);
-        // console.log(data);
+        settotalamount(data.rentperday * totaldays);
         setloading(false);
       } catch (error) {
         seterror(true);
@@ -35,26 +32,29 @@ function Bookingscreen() {
     if (roomid) {
       fetchRoom();
     }
-  }, [roomid]);
+  }, [roomid, totaldays]);
 
-  async function onToken(token){
-    console.log(token);
-    const bookingDetails={
+  async function onToken(token) {
+    const bookingDetails = {
       room,
-      userid:JSON.parse(localStorage.getItem('currentUser'))._id,
+      userid: JSON.parse(localStorage.getItem('currentUser'))._id,
       fromdate,
       todate,
       totalamount,
       totaldays,
       token
-    }
+    };
 
-    try{
-      const result=await axios.post('/api/bookings/bookroom',bookingDetails)
-    }catch(error ){
+    console.log(bookingDetails); // Log the data to ensure it's correct
 
+    try {
+      const result = await axios.post('/api/bookings/bookroom', bookingDetails);
+      console.log(result);
+    } catch (error) {
+      console.log(error);
     }
   }
+
   return (
     <div className="m-5">
       {loading ? (
@@ -66,7 +66,7 @@ function Bookingscreen() {
           <div className="row justify-content-center mt-5 bs">
             <div className="col-md-5">
               <h1>{room.name}</h1>
-              <img src={room.imageurls[0]} className="bigimg" />
+              <img src={room.imageurls[0]} className="bigimg" alt="Room" />
             </div>
             <div className="col-md-5">
               <div style={{ textAlign: "right" }}>
@@ -84,19 +84,21 @@ function Bookingscreen() {
                   <h1>Amount</h1>
                   <hr />
                   <p>Total Days: {totaldays}</p>
-                  <p>Rent per day : {room.rentperday}</p>
-                  <p>Total Amount : {totalamount}</p>
+                  <p>Rent per day: {room.rentperday}</p>
+                  <p>Total Amount: {totalamount}</p>
                 </b>
               </div>
               <div style={{ float: "right" }}>
-                 <StripeCheckout
-                  amount={totalamount*100}
-                  token={onToken}
-                  currency="INR"
-                  stripeKey="pk_test_51Ps3eFAK1krkn2bDwR7uQpx2WzxKVIoDrKUGWdDwMybXuCLhwpd4fnVLmtRcPiNTsept751GF92Ui2gAoCqhaehr00af524Bwx"
+                {totalamount > 0 && (
+                  <StripeCheckout
+                    amount={totalamount * 100}
+                    token={onToken}
+                    currency="inr"
+                    stripeKey="pk_test_51Ps3eFAK1krkn2bDwR7uQpx2WzxKVIoDrKUGWdDwMybXuCLhwpd4fnVLmtRcPiNTsept751GF92Ui2gAoCqhaehr00af524Bwx"
                   >
                     <button className="btn btn-primary">Pay Now</button>
                   </StripeCheckout>
+                )}
               </div>
             </div>
           </div>
