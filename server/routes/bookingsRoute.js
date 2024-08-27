@@ -50,7 +50,7 @@ router.post("/bookroom", async (req, res) => {
                 todate,
                 totalamount,
                 totaldays,
-                transactionId: '1234'
+                transactionId: payment.id
             });
 
             const booking = await newBooking.save();

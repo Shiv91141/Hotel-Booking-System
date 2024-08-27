@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import Error from "../components/Error.js";
 import moment from "moment";
 import StripeCheckout from 'react-stripe-checkout';
-
+import Swal from 'sweetalert2';
 function Bookingscreen() {
   var { roomid, fromdate, todate } = useParams();
   const [room, setroom] = useState(null);
@@ -48,9 +48,16 @@ function Bookingscreen() {
     console.log(bookingDetails); // Log the data to ensure it's correct
 
     try {
+      setloading(true);
       const result = await axios.post('/api/bookings/bookroom', bookingDetails);
+      setloading(false);
+      Swal.fire('Congratulations','Your Room Booked Successfully','success').then(result=>{
+        window.location.href='/bookings'
+      })
       console.log(result);
     } catch (error) {
+      setloading(false);
+      Swal.fire('OOPS','Something Went Wrong','error')
       console.log(error);
     }
   }
