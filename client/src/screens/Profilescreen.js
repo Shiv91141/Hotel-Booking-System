@@ -96,12 +96,15 @@ function MyBookings() {
                     <b>CheckOut:</b> {booking.todate}
                   </p>
                   <p>
-                    <b>Amount:</b> {booking.totalAmount}
+                    <b>Amount:</b> {booking.totalamount}
                   </p>
                   <p>
-                    Status:{" "}
-                    {booking.status == "booked" ? "Confirmed" : "Canceled"}
+                    Status:
+                    {booking.status == "Booked" ? "Confirmed" : "Canceled"}
                   </p>
+                  <div className="text-right">
+                    <button className="btn btn-primary">CANCEL BOOKING</button>
+                  </div>
                 </div>
               );
             })}
