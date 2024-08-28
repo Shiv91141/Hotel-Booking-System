@@ -30,6 +30,9 @@ code {
   margin-left: auto !important;
 }
 
+p{
+  font-size:15px !important
+}
 .smallimg{
   height:200px;
   width:100% !important;
