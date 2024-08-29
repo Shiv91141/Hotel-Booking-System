@@ -10,7 +10,7 @@ function Navbar() {
     <div>
       <nav class="navbar navbar-expand-lg ">
         <a class="navbar-brand" href="/home">
-          PRASH LODGE
+          BookMyRoom
         </a>
         <button
           class="navbar-toggler"
