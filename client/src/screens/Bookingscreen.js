@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Loader from "../components/Loader";
+import Error from "../components/Error.js";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import Error from "../components/Error.js";
 import moment from "moment";
 import StripeCheckout from "react-stripe-checkout";
 import Swal from "sweetalert2";
