@@ -6,6 +6,7 @@ import Bookingscreen from "./screens/Bookingscreen.js";
 import Registerscreen from "./screens/Registerscreen.js";
 import Loginscreen from "./screens/Loginscreen.js";
 import Profilescreen from "./screens/Profilescreen.js";
+import AdminScreen from "./screens/AdminScreen.js";
 function App() {
   return (
     <div className="App">
@@ -21,6 +22,7 @@ function App() {
           <Route path="/register" exact Component={Registerscreen} />
           <Route path="/login" exact Component={Loginscreen} />
           <Route path="/profile" exact Component={Profilescreen} />
+          <Route path="/admin" exact Component={AdminScreen} />
         </Routes>
       </BrowserRouter>
     </div>
