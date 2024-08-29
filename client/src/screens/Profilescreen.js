@@ -3,12 +3,15 @@ import axios from "axios";
 import { Tabs } from "antd";
 import Loader from "../components/Loader";
 import Error from "../components/Error.js";
+import Swal from "sweetalert2";
+import { Divider, Flex, Tag } from "antd";
+
 function Profilescreen() {
   const user = JSON.parse(localStorage.getItem("currentUser"));
 
   useEffect(() => {
     if (!user) {
-      window.loacation.href = "/login";
+      window.location.href = "/login";
     }
   }, []);
   return (
@@ -76,6 +79,28 @@ function MyBookings() {
     fetchdata();
   }, []);
 
+  async function cancelBooking(bookingid, roomid) {
+    try {
+      setloading(true);
+      const result = (
+        await axios.post("/api/bookings/cancelbooking", { bookingid, roomid })
+      ).data;
+      console.log(result);
+      setloading(false);
+      Swal.fire(
+        "Congrates",
+        "Your Booking Canceled successfully",
+        "success"
+      ).then((result) => {
+        window.location.reload();
+      });
+    } catch {
+      console.log(error);
+      setloading(false);
+      Swal("Oops", "Something went wrong", "error");
+    }
+  }
+
   return (
     <div>
       <div className="row">
@@ -100,11 +125,25 @@ function MyBookings() {
                   </p>
                   <p>
                     Status:
-                    {booking.status == "Booked" ? "Confirmed" : "Canceled"}
+                    {booking.status == "cancelled" ? (
+                      <Tag color="red">CANCELLED</Tag>
+                    ) : (
+                      <Tag color="green">CONFIRMED</Tag>
+                    )}
                   </p>
-                  <div className="text-right">
-                    <button className="btn btn-primary">CANCEL BOOKING</button>
-                  </div>
+
+                  {booking.status !== "cancelled" && (
+                    <div className="text-right">
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => {
+                          cancelBooking(booking._id, booking.roomid);
+                        }}
+                      >
+                        CANCEL BOOKING
+                      </button>
+                    </div>
+                  )}
                 </div>
               );
             })}
