@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import Loader from "../components/Loader";
 import Error from "../components/Error.js";
 import axios from "axios";
+import Swal from "sweetalert2";
+
 export default function Addroom() {
+    const [loading, setloading] = useState(false);
+    const [error, seterror] = useState();
     const [name,setname]=useState('')
     const [rentperday,setrentperday]=useState()
     const [maxcount,setmaxcount]=useState()
@@ -13,7 +17,7 @@ export default function Addroom() {
     const [imageurl2,setimageurl2]=useState()
     const [imageurl3,setimageurl3]=useState()
 
-    function addRoom(){
+    async function addRoom(){
 
         const newroom={
             name,
@@ -24,11 +28,25 @@ export default function Addroom() {
             type,
             imageurls:[ imageurl1,imageurl2,imageurl3]
         }
-        console.log(newroom);
+        // console.log(newroom);
+        try {
+            setloading(true);
+            const result=await (await axios.post('/api/rooms/addroom',newroom)).data
+            console.log(result);
+            setloading(false);
+            Swal.fire("Congrats",'Your New Room Added Successfully' ,'success').then(result=>{
+                window.location.href='/home'
+            })
+        } catch (error) {
+            console.log(error);
+            setloading(false)
+            Swal.fire("Opps",'Something Went Wrong' ,'error')
+        }
     }
   return (
     <div className="row">
         <div className="col-md-5">
+            {loading && <Loader/>}  
             <input type="text" className="form-control" placeholder="room name" 
             value={name} onChange={(e)=>setname(e.target.value)}
             />
