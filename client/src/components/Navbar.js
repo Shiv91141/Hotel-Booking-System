@@ -9,8 +9,8 @@ function Navbar() {
   return (
     <div>
       <nav class="navbar navbar-expand-lg ">
-        <a class="navbar-brand" href="#">
-          Navbar
+        <a class="navbar-brand" href="/home">
+          PRASH LODGE
         </a>
         <button
           class="navbar-toggler"
