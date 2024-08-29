@@ -4,17 +4,22 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Error from "../components/Error.js";
 import moment from "moment";
-import StripeCheckout from 'react-stripe-checkout';
-import Swal from 'sweetalert2';
+import StripeCheckout from "react-stripe-checkout";
+import Swal from "sweetalert2";
 function Bookingscreen() {
   var { roomid, fromdate, todate } = useParams();
   const [room, setroom] = useState(null);
   const [loading, setloading] = useState(true);
   const [error, seterror] = useState(false);
   const [totalamount, settotalamount] = useState(0);
-  const totaldays = moment(todate, "DD-MM-YYYY").diff(moment(fromdate, "DD-MM-YYYY"), "days") + 1;
+  const totaldays =
+    moment(todate, "DD-MM-YYYY").diff(moment(fromdate, "DD-MM-YYYY"), "days") +
+    1;
 
   useEffect(() => {
+    if (!localStorage.getItem("currentUser")) {
+      window.location.reload = "/login";
+    }
     const fetchRoom = async () => {
       try {
         setloading(true);
@@ -37,27 +42,31 @@ function Bookingscreen() {
   async function onToken(token) {
     const bookingDetails = {
       room,
-      userid: JSON.parse(localStorage.getItem('currentUser'))._id,
+      userid: JSON.parse(localStorage.getItem("currentUser"))._id,
       fromdate,
       todate,
       totalamount,
       totaldays,
-      token
+      token,
     };
 
     console.log(bookingDetails); // Log the data to ensure it's correct
 
     try {
       setloading(true);
-      const result = await axios.post('/api/bookings/bookroom', bookingDetails);
+      const result = await axios.post("/api/bookings/bookroom", bookingDetails);
       setloading(false);
-      Swal.fire('Congratulations','Your Room Booked Successfully','success').then(result=>{
-        window.location.href='/bookings'
-      })
+      Swal.fire(
+        "Congratulations",
+        "Your Room Booked Successfully",
+        "success"
+      ).then((result) => {
+        window.location.href = "/bookings";
+      });
       console.log(result);
     } catch (error) {
       setloading(false);
-      Swal.fire('OOPS','Something Went Wrong','error')
+      Swal.fire("OOPS", "Something Went Wrong", "error");
       console.log(error);
     }
   }
@@ -80,7 +89,9 @@ function Bookingscreen() {
                 <h1>Booking Details</h1>
                 <hr />
                 <b>
-                  <p>Name: {JSON.parse(localStorage.getItem('currentUser')).name}</p>
+                  <p>
+                    Name: {JSON.parse(localStorage.getItem("currentUser")).name}
+                  </p>
                   <p>From Date: {fromdate}</p>
                   <p>To Date: {todate}</p>
                   <p>Max Count: {room.maxcount}</p>
