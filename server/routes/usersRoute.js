@@ -1,42 +1,26 @@
-const express = require("express");
-const router = express.Router();
-const User = require("../models/user");
-router.post("/register", async (req, res) => {
-  const newuser = new User(req.body);
-  try {
-    const user = await newuser.save();
-    res.send("User Registered Successfully");
-  } catch (error) {
-    return req.statusCode(400).json({ error });
-  }
-});
+const  express=require( 'express');
+const router = express.Router()
+const userModel = require("../models/user.js");
+const { Register, Login, Auth ,GetAllUsers}= require ('../controller.js/userController.js')
+const { body }= require ('express-validator')
+const { VerifyUser } =require('../middleware/VerifyUser.js');
+// USER ROUTES
+router.post('/register',[
+  body('name').trim().notEmpty().withMessage("Name is Required"),
+  body('email').trim().notEmpty().withMessage("Email ID is Required")
+  .isEmail().withMessage("Email Invalid"),
+  body('password').trim().notEmpty().withMessage("Password is Required")
+  .isLength({min: 5, max: 30}).withMessage("Password Length must Be 3-50 Characters")
+], Register )
 
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email: email, password: password });
-    if (user) {
-      const temp = {
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin,
-        _id: user._id,
-      };
-      res.send(temp);
-    } else {
-      return res.status(400).json({ message: "login failed" });
-    }
-  } catch (error) {
-    return res.status(400).json({ error });
-  }
-});
+router.post('/login',[
+  body('email').trim().notEmpty().withMessage("Email ID is Required")
+  .isEmail().withMessage("Email Invalid"),
+  body('password').trim().notEmpty().withMessage("Password is Required")
+  .isLength({min: 5, max: 30}).withMessage("Password Length must Be 3-50 Characters")
+], Login )
 
-router.get("/getallusers",async(req,res)=>{
-  try{
-    const users=await User.find()
-    res.send(users)
-  }catch(error){
-    return res.status(400).json({error});
-  }
-})
+router.get('/verify', VerifyUser,Auth )
+router.get('/getallusers', VerifyUser,GetAllUsers )
+
 module.exports = router;

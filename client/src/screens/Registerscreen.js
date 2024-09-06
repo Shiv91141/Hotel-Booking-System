@@ -9,8 +9,9 @@ function Registerscreen() {
   const [password, setpassword] = useState("");
   const [cpassword, setcpassword] = useState("");
   const [loading, setloading] = useState(false);
-  const [error, seterror] = useState();
-  const [success, setsuccess] = useState();
+  const [error, seterror] = useState(false);
+  const [success, setsuccess] = useState(null);
+  const [exist,setexist]=useState(null);
   async function register() {
     if (password === cpassword) {
       const user = {
@@ -22,13 +23,17 @@ function Registerscreen() {
 
       try {
         setloading(true);
-        const result = await axios.post("/api/users/register", user).data;
+        const res = await axios.post("/api/users/register", user);
+        console.log(res);
         setloading(false);
-        setsuccess(true);
         setname("");
         setemail("");
         setpassword("");
         setcpassword("");
+        setsuccess(res.data.success);
+        console.log(res.data.exist)
+        setexist(res.data.exist);
+        // window.location.href = "/login";
       } catch (error) {
         setloading(false);
         seterror(true);
@@ -43,9 +48,10 @@ function Registerscreen() {
     <div>
       {loading && <Loader />}
       {error && <Error />}
+      {success && exist && <Error message={"User Already Exists"}/>}
       <div className="row justify-content-center mt-5">
         <div className="col-md-5">
-          {success && <Success message="Registration Successful" />}
+          {success && !exist && <Success message="Registration Successful" />}
 
           <div className="bs">
             <h2>Register</h2>

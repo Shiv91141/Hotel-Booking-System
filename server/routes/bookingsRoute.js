@@ -3,12 +3,13 @@ const router = express.Router();
 const Booking = require("../models/booking");
 const moment = require("moment");
 const Room = require("../models/room");
-// const { v4: uuidv4 } = require("uuid");
+const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 router.post("/bookroom", async (req, res) => {
   const { room, userid, fromdate, todate, totalamount, totaldays, token } =
     req.body;
+    // console.log(userid);
 
   try {
     const customer = await stripe.customers.create({
@@ -71,10 +72,10 @@ router.post("/getbookingsbyuserid", async (req, res) => {
 
   try {
     const bookings = await Booking.find({ userid: userid });
-    console.log(userid);
+    // console.log(userid);
     res.send(bookings);
 
-    console.log(bookings);
+    // console.log(bookings);
   } catch (error) {
     return res.status(400).json({ error });
   }
@@ -104,7 +105,7 @@ router.post("/cancelbooking", async (req, res) => {
 router.get("/getallbookings", async (req, res) => {
   try {
     const bookings = await Booking.find();
-    console.log(bookings);
+    // console.log(bookings);
     res.send(bookings);
   } catch (error) {
     return res.status(400).json({ error });
