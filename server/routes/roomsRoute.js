@@ -1,35 +1,14 @@
 const express = require("express");
 const router =express.Router();
 
-const Room =require('../models/room');
+const {GetRoom,AddRoom,GetAllRooms}=require('../controller.js/roomController');
+const { VerifyUser } = require("../middleware/VerifyUser");
+const {Auth} =require("../controller.js/userController")
 
-router.get("/getallrooms",async(req,res)=>{
-    try {
-        const rooms= await Room.find({});
-        return res.status(200).json(rooms);
-    } catch (error) {
-        return res.status(400).json({message:error});
-    }
-    
-});
-router.post("/getroombyid",async(req,res)=>{
-    const {roomid} =req.body;
-    try {
-        const room= await Room.findOne({_id: roomid});
-        return res.status(200).json(room);
-    } catch (error) {
-        return res.status(400).json({message:error});
-    }
-    
-});
-router .post('/addroom',async (req,res)=>{
-    try {
-        const newroom= new Room(req.body)
-        await newroom.save()
-        
-        res.send('New Room Added Successfully')
-    } catch (error) {
-        return res.status(400).json({error})
-    }
-})
+// router.get("/getallrooms",VerifyUser,GetAllRooms);
+router.get("/getallrooms",GetAllRooms);
+// router.post("/getroombyid",VerifyUser,GetRoom);
+router.post("/getroombyid",GetRoom);
+router .post('/addroom',VerifyUser,AddRoom)
+// router .post('/addroom',AddRoom)
 module.exports= router;

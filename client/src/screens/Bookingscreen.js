@@ -15,29 +15,45 @@ function Bookingscreen() {
   const totaldays =
     moment(todate, "DD-MM-YYYY").diff(moment(fromdate, "DD-MM-YYYY"), "days") +
     1;
-
-  useEffect(() => {
-    if (!localStorage.getItem("currentUser")) {
-      window.location.reload = "/login";
-    }
-    const fetchRoom = async () => {
-      try {
-        setloading(true);
-        const { data } = await axios.post("/api/rooms/getroombyid", { roomid });
-        setroom(data);
-        settotalamount(data.rentperday * totaldays);
-        setloading(false);
-      } catch (error) {
-        seterror(true);
-        console.error("Error fetching room:", error);
-        setloading(false);
+  
+    useEffect(() => {
+      // Redirect to login if no user is in localStorage
+      if (!localStorage.getItem('currentUser')) {
+        window.location.href = '/login';
+        return;
       }
-    };
-
-    if (roomid) {
-      fetchRoom();
-    }
-  }, [roomid, totaldays]);
+  
+      const fetchRoom = async () => {
+        try {
+          setloading(true);
+  
+          // Include the token in the headers for authorization
+          const config = {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          };
+  
+          // Make the POST request with the roomid and token in headers
+          const { data } = await axios.post('http://127.0.0.1:5000/api/rooms/getroombyid', { roomid }, config);
+  
+          // Update room details and total amount
+          setroom(data);
+          settotalamount(data.rentperday * totaldays);
+          setloading(false);
+        } catch (error) {
+          setloading(false);
+          seterror(true);
+          console.error('Error fetching room:', error);
+          // Redirect to login if error occurs
+          window.location.href = '/login';
+        }
+      };
+  
+      if (roomid) {
+        fetchRoom();
+      }
+    }, [roomid, totaldays]);
 
   async function onToken(token) {
     const bookingDetails = {
@@ -54,7 +70,14 @@ function Bookingscreen() {
 
     try {
       setloading(true);
-      const result = await axios.post("/api/bookings/bookroom", bookingDetails);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    };
+
+    // Make the POST request with bookingDetails and the Authorization header
+    const result = await axios.post('/api/bookings/bookroom', bookingDetails, config);
       setloading(false);
       Swal.fire(
         "Congratulations",
@@ -111,7 +134,7 @@ function Bookingscreen() {
                   <StripeCheckout
                     amount={totalamount * 100}
                     token={onToken}
-                    currency="inr"
+                    currency="INR"
                     stripeKey="pk_test_51Ps3eFAK1krkn2bDwR7uQpx2WzxKVIoDrKUGWdDwMybXuCLhwpd4fnVLmtRcPiNTsept751GF92Ui2gAoCqhaehr00af524Bwx"
                   >
                     <button className="btn btn-primary">Pay Now</button>

@@ -13,20 +13,20 @@ import axios from "axios";
 export const UserContext = createContext(null);
 function App() {
   const [user, setUser] = useState(null);
-  // useEffect(() => {
-  //   axios.get('http://127.0.0.1:5000/api/user/verify', {
-  //     headers: {
-  //       Authorization: `Bearer ${localStorage.getItem('token')}`
-  //     }
-  //   })
-  //   .then(res => {
-  //     if (res.data.success) {  
-  //       setUser(res.data.user);
-  //     }
-  //   }).catch(err => {
-  //     console.log(err);
-  //   });
-  // }, []);
+  useEffect(() => {
+    axios.get('http://127.0.0.1:5000/api/users/verify', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+    .then(res => {
+      if (res.data.success) {  
+        setUser(res.data.user);
+      }
+    }).catch(err => {
+      console.log(err);
+    });
+  }, []);
   return (
     <div className="App">
       <Navbar />

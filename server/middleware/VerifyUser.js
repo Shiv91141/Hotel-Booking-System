@@ -12,7 +12,7 @@ const VerifyUser = (req,res, next) => {
             if(err){
                 return res.status(401).json({error: "Unauthorized"})
             }
-            const user = await userModel.findOne({_id: payload._id}).select("name")
+            const user = await userModel.findOne({_id: payload._id}).select("name");
             req.user = user;
             next();
         } catch (err){

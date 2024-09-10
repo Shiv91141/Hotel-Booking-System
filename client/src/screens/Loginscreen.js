@@ -16,10 +16,12 @@ function Loginscreen() {
     try {
       setloading(true);
       const result = (await axios.post("/api/users/login", c_user)).data;
-      setloading(false);
       console.log(result);
+      setloading(false);
+      // console.log(result);
       localStorage.setItem("token", result.token);
-      localStorage.setItem("currentUser", JSON.stringify(result));
+      // console.log(result.user);
+      localStorage.setItem("currentUser", JSON.stringify(result.user));
       window.location.href = "/home";
     } catch (error) {
       setloading(false);
