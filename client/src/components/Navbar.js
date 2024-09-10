@@ -2,7 +2,9 @@ import React from "react";
 
 function Navbar() {
   function logout() {
-    localStorage.removeItem("currentUser");
+    // localStorage.removeItem("currentUser");
+
+    localStorage.clear();
     window.location.href = "./login";
   }
   const user = JSON.parse(localStorage.getItem("currentUser"));
