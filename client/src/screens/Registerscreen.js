@@ -31,9 +31,10 @@ function Registerscreen() {
         setpassword("");
         setcpassword("");
         setsuccess(res.data.success);
-        console.log(res.data.exist)
+        // console.log(res.data.exist)
         setexist(res.data.exist);
-        // window.location.href = "/login";
+        seterror(false);
+        window.location.href = "/login";
       } catch (error) {
         setloading(false);
         seterror(true);

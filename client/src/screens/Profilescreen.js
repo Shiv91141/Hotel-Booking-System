@@ -61,9 +61,14 @@ function MyBookings() {
     const fetchdata = async () => {
       try {
         setloading(true);
+        const config = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        };
         const promise = await axios.post("api/bookings/getbookingsbyuserid", {
           userid: user._id,
-        });
+        },config);
 
         const data = promise.data;
         //user._id is present
@@ -82,8 +87,13 @@ function MyBookings() {
   async function cancelBooking(bookingid, roomid) {
     try {
       setloading(true);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      };
       const result = (
-        await axios.post("/api/bookings/cancelbooking", { bookingid, roomid })
+        await axios.post("/api/bookings/cancelbooking", { bookingid, roomid },config)
       ).data;
       console.log(result);
       setloading(false);

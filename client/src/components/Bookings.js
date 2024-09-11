@@ -10,7 +10,12 @@ export default function Bookings() {
     useEffect(() => {
       const fetchdata = async () => {
         try {
-          const { data } = await axios.get("/api/bookings/getallbookings");
+          const config = {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          };
+          const { data } = await axios.get("/api/bookings/getallbookings",config);
           setbookings(data);
           console.log(data);
           setloading(false);
