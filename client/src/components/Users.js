@@ -11,8 +11,14 @@ export default function Users() {
     useEffect(() => {
       const fetchdata = async () => {
         try {
-          const { data } = await axios.get("/api/users/getallusers");
-          setusers(data);
+          const config = {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          };
+          const data = await axios.get("/api/users/getallusers",config);
+          console.log(data);
+          setusers(data.data.users);
           setloading(false);
         } catch (error) {
           console.log(error);

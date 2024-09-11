@@ -74,7 +74,7 @@ function Bookingscreen() {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-    };
+      };
 
     // Make the POST request with bookingDetails and the Authorization header
     const result = await axios.post('/api/bookings/bookroom', bookingDetails, config);

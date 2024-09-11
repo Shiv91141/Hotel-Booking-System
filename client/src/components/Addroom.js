@@ -31,7 +31,12 @@ export default function Addroom() {
         // console.log(newroom);
         try {
             setloading(true);
-            const result=await (await axios.post('/api/rooms/addroom',newroom)).data
+            const config = {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+              };
+            const result=await (await axios.post('/api/rooms/addroom',newroom,config)).data
             console.log(result);
             setloading(false);
             Swal.fire("Congrats",'Your New Room Added Successfully' ,'success').then(result=>{

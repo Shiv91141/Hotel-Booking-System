@@ -6,15 +6,6 @@ const jwt =require( 'jsonwebtoken')
 const dotenv =require( 'dotenv')
 dotenv.config({path:"../config/.env"})
 
-// router.post("/register", async (req, res) => {
-//     const newuser = new user(req.body);
-//     try {
-//       const user = await newuser.save();
-//       res.send("user Registered Successfully");
-//     } catch (error) {
-//       return req.statusCode(400).json({ error });
-//     }
-//   });
 const Register = async (req, res) => {
     const errors = validationResult(req)
     if(!errors.isEmpty()){
@@ -37,25 +28,6 @@ const Register = async (req, res) => {
     }
 };
 
-// router.post("/login", async (req, res) => {
-//     const { email, password } = req.body;
-//     try {
-//       const user = await user.findOne({ email: email, password: password });
-//       if (user) {
-//         const temp = {
-//           name: user.name,
-//           email: user.email,
-//           isAdmin: user.isAdmin,
-//           _id: user._id,
-//         };
-//         res.send(temp);
-//       } else {
-//         return res.status(400).json({ message: "login failed" });
-//       }
-//     } catch (error) {
-//       return res.status(400).json({ error });
-//     }
-//   });
 const Login = async (req, res) => {
     const errors = validationResult(req)
     if(!errors.isEmpty()){
@@ -88,7 +60,7 @@ const Login = async (req, res) => {
 const Auth = async (req, res) => {
     return res.status(200).json({
                 success: true,
-                user: req.user._doc
+                user: req.user
     });
     
 };

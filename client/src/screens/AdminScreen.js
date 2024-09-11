@@ -8,14 +8,20 @@ import Users from "../components/Users.js";
 import { Tabs } from "antd";
 import axios from "axios";
 function AdminScreen() {
+  const [Admin,SetAdmin]=useState(false);
+  const user = localStorage.getItem("currentUser")
   useEffect(() => {
-    if (!JSON.parse(localStorage.getItem("currentUser")).isAdmin) {
+    if (!user){
+      window.location.href = '/login'
+    } else if (!JSON.parse(user).isAdmin) {
       window.location.href = '/home'
+    } else {
+      SetAdmin(true);
     }
   }, [])
 
   return (
-    <div className="mt-3 ml-3 bs mr-3">
+    Admin?<div className="mt-3 ml-3 bs mr-3">
       <h2 className="text-center">
         <b>Admin Panel</b>
       </h2>
@@ -44,14 +50,10 @@ function AdminScreen() {
           },
         ]}
       />
-    </div>
+    </div>:<></>
   );
 }
 
 export default AdminScreen;
-
-//Booking list component
-//Users list component
-//Rooms list component
 
 

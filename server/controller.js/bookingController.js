@@ -1,7 +1,6 @@
 const express = require("express");
 const Booking = require("../models/booking");
 const Room = require("../models/room");
-const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const BookRoom=async (req, res) => {
@@ -20,16 +19,6 @@ const BookRoom=async (req, res) => {
       currency: "inr",
       receipt_email: token.email,
     });
-    // const payment = await stripe.charges.create({
-    //     amount: totalamount * 100,
-    //     customer: customer.id,
-    //     currency: 'inr',
-    //     receipt_email: token.email
-    // }, {
-    //     idempotency_key: uuidv4()
-    // });
-
-    // console.log("Payment successful:", payment);
 
     if (payment) {
       const newBooking = new Booking({
